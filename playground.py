@@ -1,13 +1,9 @@
 import datetime
+import openpyxl
 
+wb = openpyxl.load_workbook("sample_file.xlsx")
+ws = wb.active
 
-def main():
-    test = "test, test".split(",")
+te = {ws.cell(row=2,column=5).value.date():0}
 
-    for i in range(len(test)):
-        test[i] = test[i].strip()
-
-    print("meow".split(", "))
-
-
-main()
+print(datetime.date(day=25, month=7, year=2023) in te)
