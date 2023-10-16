@@ -14,6 +14,7 @@ Here are the main ideas in mind:
 """
 
 import openpyxl
+import time
 from datetime import date
 
 EXPENSE = 0
@@ -21,6 +22,16 @@ AMOUNT = 1
 TYPE = 2
 COMMENT = 3
 DATE = 4
+
+
+def wait():
+    time.sleep(4)
+
+    command = input("Enter \"c\" to continue: ").lower()
+
+    if command != "c":
+        print("Exiting program...")
+        exit(0)
 
 
 class DataBase:
@@ -175,7 +186,7 @@ class DataBase:
         type_total = self.total_per_type()
 
         for expense_type in type_count:
-            out[expense_type] = round(type_total[expense_type] / type_count, 2)
+            out[expense_type] = round(type_total[expense_type] / type_count[expense_type], 2)
 
         return out
 
@@ -196,15 +207,6 @@ class DataBase:
                     else:
                         count[expense_type] += 1
 
-        # Code to sort this dict for later use:
-        # get_val = lambda x : count[x]
-        # values = list(count.values())
-        # keys = list(count.keys())
-        # keys.sort(key=get_val)
-        # values.sort()
-        #
-        # And then we iterate over them to print
-
         return count
 
     def total_per_type(self):
@@ -212,8 +214,6 @@ class DataBase:
         Sums the spending of each expense type and maps each type to it's spending.
         :return: Dictionary mapping each expense type to its total spending.
         """
-
-        # TODO: finish it's interpretation in main.py
 
         out = dict()
 
@@ -262,7 +262,7 @@ class DataBase:
 
         return out
 
-    def get_trimmed_database(self, start, end):
+    def trim_database(self, start, end):
         """
         Trims down the database to days that fall between a start and end date provided.
         :param start: String: representing the starting date of the range to trim down to.
@@ -297,7 +297,7 @@ class DataBase:
             if start <= day <= end:
                 trimmed_db[day] = self.data[day]
 
-        return trimmed_db
+        self.data = trimmed_db
 
     def day_report(self, day=None):
         """
@@ -330,7 +330,7 @@ class DataBase:
                        amount=expense[AMOUNT],
                        comment="" if expense[COMMENT] is None else expense[COMMENT])
 
-        out += "\nStats:\ntotal spending = {total}EGP\naverage expense amount = {average}EGP\nno. expenses = {count}." \
+        out += "\nStats:\ntotal spending = {total}EGP\naverage expense amount = {average}EGP\nno. expenses = {count}" \
                "".format(total=total,
                          average=round(total / count, 2),
                          count=count

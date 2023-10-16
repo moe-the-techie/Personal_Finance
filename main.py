@@ -1,4 +1,4 @@
-from Expense_Analysis import DataBase, EXPENSE, AMOUNT, TYPE, DATE
+from Expense_Analysis import DataBase, EXPENSE, AMOUNT, TYPE, DATE, COMMENT, wait
 import datetime
 import sys
 
@@ -27,11 +27,10 @@ def main():
 
     elif command == "r":
         print("Report System: Starting...")
-        db = DataBase(file)
+        database = DataBase(file)
 
-        command = int(input(REPORT_COMMANDS))
-
-        report(db, command)
+        command = input(REPORT_COMMANDS)
+        report(database, command)
 
     elif command == "a":
         print("About me:\nThis project has been developed and is sustained by Momen Ahmed, a CS student at Cairo \n"
@@ -56,6 +55,13 @@ def report(database=None, command=None):
     :param database: a database object that has all the data stored within it
     """
 
+    try:
+        command = int(command)
+
+    except ValueError:
+        print("Invalid command. Use command h for instructions on valid commands.\nTerminating process...")
+        exit(1)
+
     if command is None or command not in range(11):
         print("Invalid command.")
         exit(1)
@@ -65,7 +71,7 @@ def report(database=None, command=None):
         exit(2)
 
     elif command == 0:
-        print("Exiting program...")
+        print("Thanks for using Personal_Finance!\nExiting program...")
         exit(0)
 
     elif command == 1:
@@ -89,49 +95,62 @@ def report(database=None, command=None):
                                                                    day_average=database.daily_average(),
                                                                    max_expenses=max_expenses))
 
-        print("\nend of report.\n")
+        print("end of report.\n")
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 2:
 
-        day, month, year = str(input("Enter date (format DD-MM-YYYY): ")).split("-")
-        day = int(day)
-        month = int(month)
-        year = int(year)
+        requested_day = None
 
-        requested_day = datetime.date(day=day, month=month, year=year)
+        try:
+            day, month, year = str(input("Enter date (format DD-MM-YYYY): ")).split("-")
+            day = int(day)
+            month = int(month)
+            year = int(year)
+
+            requested_day = datetime.date(day=day, month=month, year=year)
+
+        except ValueError:
+            print("\nInvalid date provided, terminating process..\n")
+            exit(1)
 
         print(database.day_report(requested_day))
 
         print("\nend of report.\n")
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 3:
         start = input("Enter start date (format DD-MM-YYYY): ")
         end = input("Enter end date (format DD-MM-YYYY): ")
 
-        database = database.get_trimmed_database(start, end)
+        database.trim_database(start, end)
 
-        print("database updated")
+        print("\ndatabase updated\n")
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 4:
-        print("TOTAL SPENDING = {total}".format(total=database.total_spending()))
+        print("\nTOTAL SPENDING = {total}EGP\n".format(total=database.total_spending()))
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 5:
-        print("AVERAGE SPENDING PER EXPENSE = {avg}".format(avg=database.expense_average()))
+        print("\nAVERAGE SPENDING PER EXPENSE = {avg}EGP\n".format(avg=database.expense_average()))
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 6:
-        print("AVERAGE DAILY SPENDING = {avg}".format(avg=database.daily_average()))
+        print("\nAVERAGE DAILY SPENDING = {avg}EGP\n".format(avg=database.daily_average()))
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 7:
 
@@ -141,24 +160,25 @@ def report(database=None, command=None):
 
         for i in range(len(commented_expense_list)):
             expense = commented_expense_list[i]
-            commented_expenses += "{i}. {name} (category: {type}) costing {amount} on {date}.\n" \
+            commented_expenses += "{i}. {name} (category: {type}) costing {amount}, comment \"{comment}\".\n" \
                 .format(i=i,
                         name=expense[EXPENSE].lower(),
                         type=expense[TYPE],
                         amount=expense[AMOUNT],
-                        date=expense[DATE])
+                        comment=expense[COMMENT])
 
         print(commented_expenses)
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 8:
 
-        print("HIGHEST COST EXPENSE/S:")
+        print("\nHIGHEST COST EXPENSE/S:")
         c = 1
 
         for expense in database.maximum_expenses():
-            print("{c}. {expense}, purchased on {date}, costing {cost}LE.".format(
+            print("{c}. {expense}, purchased on {date}, costing {cost}EGP.".format(
                 c=c,
                 expense=expense[EXPENSE],
                 date=expense[DATE],
@@ -169,7 +189,8 @@ def report(database=None, command=None):
 
         print("\nend of report.\n")
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 9:
 
@@ -180,7 +201,7 @@ def report(database=None, command=None):
         type_average = database.type_averages()
 
         for expense_type in type_total:
-            print("Type: {expense_type} total spending: {total} score: {score} average: {average}".format(
+            print("(type: {expense_type}) total spending: {total}EGP, no. expenses: {score}, average: {average}EGP".format(
                 expense_type=expense_type,
                 total=type_total[expense_type],
                 score=type_score[expense_type],
@@ -189,22 +210,28 @@ def report(database=None, command=None):
 
         print("\nend of report.\n")
 
-        report(database, int(input(REPORT_COMMANDS)))
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
     elif command == 10:
 
-        print("TOP 5 EXPENSES:")
+        print("\nTOP 5 EXPENSES:\n")
 
         top_five = database.most_frequent_expenses()
         c = 1
 
         for expense in top_five:
-            print("{c}. {expense}, purchased on {date}, costing {cost}LE.".format(
+            print("{c}. expense: {expense}, frequency: {count}.".format(
                 c=c,
-                expense=expense[EXPENSE],
-                date=expense[DATE],
-                cost=expense[AMOUNT]
+                expense=expense,
+                count=top_five[expense]
             ))
+            c += 1
+
+        print()
+
+        wait()
+        report(database, input(REPORT_COMMANDS))
 
 
 if __name__ == "__main__":
