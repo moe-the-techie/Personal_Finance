@@ -1,3 +1,0 @@
-
-print(input("h: ").lower())
-
