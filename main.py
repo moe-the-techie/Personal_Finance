@@ -9,10 +9,8 @@ REPORT_COMMANDS = "enter report command:\n1 --> general stats report\n2 --> one 
 
 
 def main():
-    """
-    Here We will take the console's input and create objects to handle the command at hand
-    """
 
+    # Ensure valid input
     if len(sys.argv) <= 2:
         print("Usage: python main.py command file.xlsx\nCommand list:\nh --> prints out initial user manual\nr -->"
               " launches reporting system\na --> prints about me\ne --> exits the program")
@@ -21,9 +19,10 @@ def main():
     command = sys.argv[1].lower()
     file = sys.argv[2]
 
+    # Print based on command
     if command == "h":
-        print("Command list:\nh --> prints initial user manual\nr --> launches reporting system\na --> prints"
-              " about me\ne --> exits the program")
+        print("Usage: python main.py command file.xlsx\nCommand list:\nh --> prints help\nr -->"
+              " starts reporting on data\na --> prints about me\ne --> exits the program")
 
     elif command == "r":
         print("Report System: Starting...")
@@ -44,7 +43,8 @@ def main():
         exit(0)
 
     else:
-        print("Invalid command. Use command h for instructions on valid commands.\nTerminating process...")
+        print("Invalid command. Use \"python main.py h file.xlsx\" for instructions on valid commands.\n"
+              "Terminating process...")
         exit(1)
 
 
@@ -124,6 +124,7 @@ def report(database=None, command=None):
         report(database, input(REPORT_COMMANDS))
 
     elif command == 3:
+
         start = input("Enter start date (format DD-MM-YYYY): ")
         end = input("Enter end date (format DD-MM-YYYY): ")
 
@@ -135,18 +136,21 @@ def report(database=None, command=None):
         report(database, input(REPORT_COMMANDS))
 
     elif command == 4:
+
         print("\nTOTAL SPENDING = {total}EGP\n".format(total=database.total_spending()))
 
         wait()
         report(database, input(REPORT_COMMANDS))
 
     elif command == 5:
+
         print("\nAVERAGE SPENDING PER EXPENSE = {avg}EGP\n".format(avg=database.expense_average()))
 
         wait()
         report(database, input(REPORT_COMMANDS))
 
     elif command == 6:
+
         print("\nAVERAGE DAILY SPENDING = {avg}EGP\n".format(avg=database.daily_average()))
 
         wait()

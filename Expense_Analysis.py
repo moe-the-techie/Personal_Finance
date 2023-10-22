@@ -1,22 +1,8 @@
-"""
-Here we'll have all the objects and structures for analyzing the Expenses Tracking data
-
-Here are the main ideas in mind:
-> We're going to create a class called dataset or something similar that takes a file name in the initialization
-> That is to extract all the data and store it in a dictionary that maps each date to a list of tuples each tuple representing an expense
-> And to of course include functions that extract data, create summaries, and extract certain pieces of information from the dataset
-> Example pieces of information to extract: average expense size, average spending per day, commented expenses, total expenses (DONE)
-> Most frequent expenses, most frequent expense type, the highest cost expense (DONE)
-> get_trimmed_database: (a helper function) returns a trimmed down version of self.data that is within a
-> certain range given as an argument to the function DONE
-> day_report: a function that takes a date (either in string or date object) and returns a formatted string for that day. DONE
-> spending_per_type: a function that returns a dictionary of all types each mapped to the total spending on it
-"""
-
 import openpyxl
 import time
 from datetime import date
 
+# Constants that signify the indexes of each attribute of an expense within the tuple
 EXPENSE = 0
 AMOUNT = 1
 TYPE = 2
@@ -25,6 +11,9 @@ DATE = 4
 
 
 def wait():
+    """
+    Gives user time to read the report & prompts them to continue.
+    """
     time.sleep(4)
 
     command = input("Enter \"c\" to continue: ").lower()
@@ -60,25 +49,26 @@ class DataBase:
     def load_data(self, file):
         """
         Loads all data from a given file into the dataset.
-        :param file: An Excel (.xlsx) file to load the data from.
+        :param file: An Excel (.xlsx) file name stored in a string.
         """
 
+        # Get active sheet from workbook
         wb = openpyxl.load_workbook(file, read_only=True)
         ws = wb.active
 
+        # Ensure second row is not empty
         if ws.cell(row=2, column=2) is None:
             raise ValueError
 
         # Start from the 2nd row to ignore headers and map each date to a list of expenses each stored in a tuple.
         for i in range(2, ws.max_row + 1):
             if ws.cell(row=i, column=DATE + 1).value.date() not in self.data:
-                self.data[ws.cell(row=i, column=DATE + 1).value.date()] = [
-                    (ws.cell(row=i, column=EXPENSE + 1).value.lower(),
-                     int(ws.cell(row=i, column=AMOUNT + 1).value),
-                     ws.cell(row=i, column=TYPE + 1).value.lower().split(
-                         ", "),
-                     ws.cell(row=i, column=COMMENT + 1).value,
-                     ws.cell(row=i, column=DATE + 1).value.date())]
+                self.data[ws.cell(row=i, column=DATE + 1).value.date()] = [(
+                    ws.cell(row=i, column=EXPENSE + 1).value.lower(),
+                    int(ws.cell(row=i, column=AMOUNT + 1).value),
+                    ws.cell(row=i, column=TYPE + 1).value.lower().split(", "),
+                    ws.cell(row=i, column=COMMENT + 1).value,
+                    ws.cell(row=i, column=DATE + 1).value.date())]
 
             else:
                 # Appending the expense to the day
@@ -291,6 +281,7 @@ class DataBase:
             print("Invalid Date entered")
             exit(1)
 
+        # Trim down the database
         trimmed_db = dict()
 
         for day in self.data:
