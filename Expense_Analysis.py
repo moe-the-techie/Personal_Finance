@@ -83,7 +83,7 @@ class DataBase:
 
     def maximum_expenses(self):
         """
-        Finds the highest expense\s in the dataset.
+        Finds the highest expense(s) in the dataset.
         :return: A list of maximum expenses.
         """
 
