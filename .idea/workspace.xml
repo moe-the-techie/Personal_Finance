@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="727bb1a6-694b-44be-8758-a273a1c5030b" name="Changes" comment="Removed Playground File">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="727bb1a6-694b-44be-8758-a273a1c5030b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Expense_Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/Expense_Analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +40,7 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Python.Expense_Analysis.executor": "Run",
+    "Python.scratch.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -54,6 +55,11 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "vcs.Subversion",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
+    ]
   }
 }]]></component>
   <component name="RunManager" selected="Python.Expense_Analysis">
@@ -103,6 +109,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Personal_Finance" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Personal_Finance" />
       <option name="ENV_FILES" value="" />
@@ -130,6 +159,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Expense_Analysis" />
+        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -164,7 +194,8 @@
       <workItem from="1707171463606" duration="213000" />
       <workItem from="1707171762329" duration="1677000" />
       <workItem from="1707306385239" duration="32000" />
-      <workItem from="1707796752400" duration="2791000" />
+      <workItem from="1707796752400" duration="3083000" />
+      <workItem from="1707986011217" duration="4727000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1695809077005</created>
@@ -208,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1697537071764</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Brainstormed general structure for project &amp; added load_data.">
+      <option name="closed" value="true" />
+      <created>1707799774841</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1707799774841</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -232,10 +271,12 @@
     <MESSAGE value="Test Commit" />
     <MESSAGE value="Adding Final Features &amp; Fixed Bugs" />
     <MESSAGE value="Removed Playground File" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed Playground File" />
+    <MESSAGE value="Brainstormed general structure for project &amp; added load_data." />
+    <option name="LAST_COMMIT_MESSAGE" value="Brainstormed general structure for project &amp; added load_data." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Personal_Finance$test.coverage" NAME="test Coverage Results" MODIFIED="1705515655224" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../../Programming/Python" />
-    <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1707799529562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$test.coverage" NAME="test Coverage Results" MODIFIED="1707987354584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../../Programming/Python" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1707988892706" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1707990745301" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

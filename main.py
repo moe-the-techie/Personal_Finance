@@ -1,19 +1,23 @@
-from Expense_Analysis import DataBase, EXPENSE, AMOUNT, TYPE, DATE, COMMENT, wait
+import Expense_Analysis
 import datetime
 import sys
 
-REPORT_COMMANDS = "enter report command:\n1 --> general stats report\n2 --> one day report\n3 --> choose time" \
-                  " range\n4 --> total spending\n5 --> expense average\n6 --> average daily spending\n7 -->" \
-                  " commented expenses\n8 --> highest cost expense/s\n9 --> expense type report\n10 --> " \
-                  "5 most frequent expenses\n0 --> exit program\n\ncommand: "
+REPORT_COMMANDS = ("enter report command:\n1 --> general stats report\n2 --> one day report\n3 --> choose time"
+                   " range\n4 --> total spending\n5 --> expense average\n6 --> average daily spending\n7 -->"
+                   " commented expenses\n8 --> highest cost expense/s\n9 --> expense type report\n10 --> "
+                   "5 most frequent expenses\n0 --> exit program\n\ncommand: ")
+
+TUTORIAL = ("Usage (type into terminal): python main.py command file.xlsx\nCommand list:\nh --> prints out initial "
+            "user manual\nr --> launches reporting system\na --> prints about me\ne --> exits the program")
+
+# I think this file could really use improvements, but this would mean changing the entire UI system from console
+# commands to something more intuitive & in line with my vision. Will check on that later down the road.
 
 
 def main():
-
     # Ensure valid input
     if len(sys.argv) <= 2:
-        print("Usage: python main.py command file.xlsx\nCommand list:\nh --> prints out initial user manual\nr -->"
-              " launches reporting system\na --> prints about me\ne --> exits the program")
+        print(TUTORIAL)
         exit(1)
 
     command = sys.argv[1].lower()
@@ -21,8 +25,7 @@ def main():
 
     # Print based on command
     if command == "h":
-        print("Usage: python main.py command file.xlsx\nCommand list:\nh --> prints help\nr -->"
-              " starts reporting on data\na --> prints about me\ne --> exits the program")
+        print(TUTORIAL)
 
     elif command == "r":
         print("Report System: Starting...")
@@ -40,11 +43,12 @@ def main():
 
     elif command == "e":
         print("Exiting program...")
+        # Here you might want to clear memory before exiting
         exit(0)
 
     else:
-        print("Invalid command. Use \"python main.py h file.xlsx\" for instructions on valid commands.\n"
-              "Terminating process...")
+        print("Invalid command. Use the command \"python main.py h your_file.xlsx\" for instructions on valid "
+              "commands.\nTerminating process...")
         exit(1)
 
 
@@ -81,7 +85,7 @@ def report(database=None, command=None):
         max_expenses = "HIGHEST AMOUNT EXPENSE\S:\n"
 
         for i in range(1, len(max_expense_list) + 1):
-            expense = max_expense_list[i-1]
+            expense = max_expense_list[i - 1]
             max_expenses += "{i}. {name} (category: {type}) costing {amount} on {date}.\n" \
                 .format(i=i,
                         name=str(expense[EXPENSE]).lower(),
@@ -205,12 +209,13 @@ def report(database=None, command=None):
         type_average = database.type_averages()
 
         for expense_type in type_total:
-            print("(type: {expense_type}) total spending: {total}EGP, no. expenses: {score}, average: {average}EGP".format(
-                expense_type=expense_type,
-                total=type_total[expense_type],
-                score=type_score[expense_type],
-                average=type_average[expense_type]
-            ))
+            print(
+                "(type: {expense_type}) total spending: {total}EGP, no. expenses: {score}, average: {average}EGP".format(
+                    expense_type=expense_type,
+                    total=type_total[expense_type],
+                    score=type_score[expense_type],
+                    average=type_average[expense_type]
+                ))
 
         print("\nend of report.\n")
 
