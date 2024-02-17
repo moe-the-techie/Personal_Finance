@@ -1,7 +1,9 @@
 import openpyxl as xl
 import pandas as pd
 
-# Functions: I'll try to keep the existing functions, making adjustments to what I see fits.
+# Set display options to show all columns and rows
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 
 def load_data(file: str):
@@ -13,8 +15,10 @@ def load_data(file: str):
 
     try:
 
+        file = str(file)
+
         if not file.endswith('.xlsx'):
-            raise ValueError('Invalid file format, only xlsx files are supported')
+            raise ValueError('Invalid file format, please enter a file name ending with ".xlsx".')
 
         wb = xl.load_workbook(file)
         ws = wb.active
@@ -42,7 +46,8 @@ def load_data(file: str):
             }, ignore_index=True)
 
     except FileNotFoundError:
-        print("File wasn't found, please watch out for typos!")
+        print("File wasn't found, please make the file exists in the same directory"
+              "as main.py. And watch out for typos!")
         exit(1)
 
     except ValueError as e:
@@ -58,9 +63,36 @@ def daily_average(expenses: pd.DataFrame):
     """
     Calculates the average spending per day.
     :param expenses: Pandas dataframe containing expenses data.
-    :return: Float representing average spending per day, rounded to two digits past the decimal place.
+    :return: float representing average spending per day, rounded to two digits past the decimal place.
     """
     daily_sum = expenses.groupby('date')['amount'].sum()
     total = daily_sum.sum()
 
     return round(total / len(daily_sum), 2)
+
+
+def expenses_average(expenses: pd.DataFrame):
+    """
+    Calculates the average spending per expense.
+    :param expenses: pandas DataFrame containing expense data.
+    :return: float representing average spending per expense, rounded to two digits past the decimal place.
+    """
+    return round(expenses['amount'].sum() / len(expenses), 2)
+
+
+def total_spending(expenses: pd.DataFrame):
+    """
+    Calculates the total spending over the time range of the given dataframe.
+    :param expenses: pandas DataFrame containing expense data.
+    :return: float representing the total spending.
+    """
+    return expenses['amount'].sum()
+
+
+def get_commented_expenses(expenses: pd.DataFrame):
+    """
+    Getter function to get all expenses with comments
+    :param expenses: pandas DataFrame containing expense data
+    :return: pandas DataFrame containing all commented expenses
+    """
+    return expenses[expenses['comment'].notna()]
