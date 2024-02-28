@@ -2,6 +2,8 @@ import Expense_Analysis
 import datetime
 import sys
 
+# TODO: expense_type_report, total_stats_report, expense_frequency, trim_time_range, handling outliers.
+
 REPORT_COMMANDS = ("enter report command:\n1 --> general stats report\n2 --> one day report\n3 --> choose time"
                    " range\n4 --> total spending\n5 --> expense average\n6 --> average daily spending\n7 -->"
                    " commented expenses\n8 --> highest cost expense/s\n9 --> expense type report\n10 --> "

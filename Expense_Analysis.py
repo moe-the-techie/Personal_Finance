@@ -1,17 +1,20 @@
 import openpyxl as xl
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Set display options to show all columns and rows
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
 
-def load_data(file: str):
+def load_data(file: str) -> pd.DataFrame:
     """
     Loads the data from the given Excel file into a pandas DataFrame.
     :param file: a string containing the name of a '.xlsx' file to load
-    :return: Dataframe that contains all the data loaded from the file
+    :return: pandas DataFrame that contains all the data loaded from the file
     """
+
+    # IDEA: We can have a test case here where if the loaded data is none to check if the file is formatted properly
 
     try:
 
@@ -26,7 +29,7 @@ def load_data(file: str):
         expenses = pd.DataFrame({
             'expense': [],
             'amount': [],
-            'types': [],
+            'type': [],
             'comment': [],
             'date': []
         })
@@ -40,7 +43,7 @@ def load_data(file: str):
             expenses = expenses._append({
                 'expense': row[0].value,
                 'amount': float(row[1].value),
-                'types': row[2].value.split(),
+                'type': tuple(row[2].value.split(',')),
                 'comment': row[3].value,
                 'date': row[4].value
             }, ignore_index=True)
@@ -59,7 +62,7 @@ def load_data(file: str):
     return expenses
 
 
-def daily_average(expenses: pd.DataFrame):
+def daily_average(expenses: pd.DataFrame) -> float:
     """
     Calculates the average spending per day.
     :param expenses: Pandas dataframe containing expenses data.
@@ -71,7 +74,7 @@ def daily_average(expenses: pd.DataFrame):
     return round(total / len(daily_sum), 2)
 
 
-def expenses_average(expenses: pd.DataFrame):
+def expenses_average(expenses: pd.DataFrame) -> float:
     """
     Calculates the average spending per expense.
     :param expenses: pandas DataFrame containing expense data.
@@ -80,7 +83,7 @@ def expenses_average(expenses: pd.DataFrame):
     return round(expenses['amount'].sum() / len(expenses), 2)
 
 
-def total_spending(expenses: pd.DataFrame):
+def total_spending(expenses: pd.DataFrame) -> float:
     """
     Calculates the total spending over the time range of the given dataframe.
     :param expenses: pandas DataFrame containing expense data.
@@ -89,10 +92,56 @@ def total_spending(expenses: pd.DataFrame):
     return expenses['amount'].sum()
 
 
-def get_commented_expenses(expenses: pd.DataFrame):
+def get_commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
     """
     Getter function to get all expenses with comments
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame containing all commented expenses
     """
     return expenses[expenses['comment'].notna()]
+
+
+def top_ten_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
+    """
+    Getter function that retrieves the ten highest expenses in amount of the given dataframe
+    :param expenses: pandas DataFrame containing expense data
+    :return:  pandas DataFrame containing top 10 expenses
+    """
+
+    expenses = expenses.drop_duplicates(subset=['expense']).sort_values(by='amount', ascending=False)
+
+    return expenses.iloc[0:10, ]
+
+
+def expense_type_average(expenses: pd.DataFrame) -> None:
+    """
+    Plotting function that generates a bar chart of the average spending of each expense type in the given dataframe
+    :param expenses: pandas DataFrame containing expense data
+    """
+
+    # Average spending per expense type
+    per_type_average = expenses.groupby('type')['amount'].mean()
+
+    # List of strings containing all expense types & type combinations in the dataframe
+    expense_types = [', '.join(expense) if len(expense) > 1 else str(expense).strip("(,')") for expense in
+                     per_type_average.index]
+
+    # Adjust plot image size
+    plt.figure(figsize=(12, 8))
+
+    per_type_average.plot(x='type', y='amount', kind='bar')
+
+    # Use the expense_types list as the ticks for x-axis
+    plt.xticks(range(len(expense_types)), expense_types, rotation=90)
+
+    # Touch-ups to plot
+    plt.title('Average Spending per type')
+    plt.xlabel('Expense Type/s')
+    plt.ylabel('Average Spending (EGP)')
+    plt.tight_layout()
+
+    plt.show()
+
+    print("Plot generated successfully.")
+
+# TODO: function that reports on total spending of each expense type & spending over time
