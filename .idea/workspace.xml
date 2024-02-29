@@ -7,7 +7,6 @@
     <list default="true" id="727bb1a6-694b-44be-8758-a273a1c5030b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Expense_Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/Expense_Analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +203,8 @@
       <workItem from="1708851591895" duration="6024000" />
       <workItem from="1708967354799" duration="2949000" />
       <workItem from="1709050008466" duration="2326000" />
-      <workItem from="1709140805913" duration="3967000" />
+      <workItem from="1709140805913" duration="4485000" />
+      <workItem from="1709221229828" duration="2460000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1695809077005</created>
@@ -286,6 +286,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Personal_Finance$test.coverage" NAME="test Coverage Results" MODIFIED="1707987354584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../../Programming/Python" />
     <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1709051118320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1709146732858" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1709223044147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

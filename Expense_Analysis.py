@@ -69,6 +69,7 @@ def daily_average(expenses: pd.DataFrame) -> float:
     :return: float representing average spending per day, rounded to two digits past the decimal place.
     """
     daily_sum = expenses.groupby('date')['amount'].sum()
+
     total = daily_sum.sum()
 
     return round(total / len(daily_sum), 2)
@@ -122,26 +123,53 @@ def expense_type_average(expenses: pd.DataFrame) -> None:
     # Average spending per expense type
     per_type_average = expenses.groupby('type')['amount'].mean()
 
+    plot_type_data(per_type_average)
+
+
+def expense_type_total(expenses: pd.DataFrame) -> None:
+    """
+    Plotting function that generates a bar chart of the total spending of each expense type in the given dataframe
+    :param expenses: pandas DataFrame containing expense data
+    """
+    per_type_total = expenses.groupby('type')['amount'].sum()
+
+    plot_type_data(per_type_total, total=True)
+
+    print("Plot generated successfully.")
+
+
+def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
+    """
+    Helper function that generates bar charts using the data within the passed series given that it's grouped by type
+    :param total: indicator used to signify whether the plot is for total spending or average spending
+    :param grouped_data: pandas Series containing expense data grouped by type with sum or mean operation done on amount
+    """
+
     # List of strings containing all expense types & type combinations in the dataframe
     expense_types = [', '.join(expense) if len(expense) > 1 else str(expense).strip("(,')") for expense in
-                     per_type_average.index]
+                     grouped_data.index]
 
     # Adjust plot image size
     plt.figure(figsize=(12, 8))
 
-    per_type_average.plot(x='type', y='amount', kind='bar')
+    grouped_data.plot(x='type', y='amount', kind='bar')
 
     # Use the expense_types list as the ticks for x-axis
     plt.xticks(range(len(expense_types)), expense_types, rotation=90)
 
-    # Touch-ups to plot
-    plt.title('Average Spending per type')
-    plt.xlabel('Expense Type/s')
-    plt.ylabel('Average Spending (EGP)')
-    plt.tight_layout()
+    # Touch-ups to plot depending on whether we're displaying total spending or average spending data
+    if total:
+        plt.title('Total Spending Per-Type')
+        plt.ylabel('Total Amount Spent (EGP)')
 
+    else:
+        plt.title('Average Spending Per-Type')
+        plt.ylabel('Average Amount Spent (EGP)')
+
+    plt.xlabel('Expense Type/s')
+    plt.tight_layout()
     plt.show()
 
     print("Plot generated successfully.")
 
-# TODO: function that reports on total spending of each expense type & spending over time
+# IDEA: a function that tracks spending of a certain type over time and spots trends in spending generally
