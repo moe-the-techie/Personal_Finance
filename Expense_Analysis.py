@@ -1,6 +1,7 @@
 import openpyxl as xl
 import pandas as pd
 import matplotlib.pyplot as plt
+import datetime as dt
 
 # Set display options to show all columns and rows
 pd.set_option('display.max_columns', None)
@@ -45,7 +46,7 @@ def load_data(file: str) -> pd.DataFrame:
                 'amount': float(row[1].value),
                 'type': tuple(row[2].value.split(',')),
                 'comment': row[3].value,
-                'date': row[4].value
+                'date': dt.datetime.strptime(row[4].value, '%B %d, %Y').date()
             }, ignore_index=True)
 
     except FileNotFoundError:
@@ -172,4 +173,36 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
 
     print("Plot generated successfully.")
 
-# IDEA: a function that tracks spending of a certain type over time and spots trends in spending generally
+
+def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFrame:
+    """
+    Trims down the time range of an expenses dataframe down to the given start & end dates
+    :param start: string formatted "YYYY-MM-DD" signifying the starting date
+    :param end: string formatted "YYYY-MM-DD" signifying the starting date
+    :param expenses: pandas DataFrame containing expense data to trim down
+    :return: pandas DataFrame containing expenses data during the given timeframe only
+    """
+
+    try:
+        # Convert start and end dates to datetime.date objects
+        start = dt.datetime.strptime(start, "%Y-%m-%d").date()
+        end = dt.datetime.strptime(end, "%Y-%m-%d").date()
+
+        if start > end or start not in expenses['date'].values or end not in expenses['date'].values or end == start:
+            raise ValueError
+
+    except ValueError:
+        print("Invalid date/s entered. Please try again, making sure the start and end dates are within the provided "
+              "dataset.")
+
+        # TODO: try again by possibly re-prompting here or re-calling a certain function & ensure prompt explains
+        #  that start date is inclusive and end date is exclusive
+
+    return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
+
+
+if __name__ == '__main__':
+    df = load_data('Expenses.xlsx')
+
+    print(change_time_range('2023-10-1', '2024-1-1', df))
+
