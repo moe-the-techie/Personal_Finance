@@ -200,9 +200,3 @@ def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFr
 
     return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
 
-
-if __name__ == '__main__':
-    df = load_data('Expenses.xlsx')
-
-    print(change_time_range('2023-10-1', '2024-1-1', df))
-
