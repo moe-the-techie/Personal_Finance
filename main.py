@@ -2,7 +2,8 @@ import Expense_Analysis
 import datetime
 import sys
 
-# TODO: total_stats_report, expense_frequency, handling outliers.
+# TODO: total_stats_report, make sure user is prompted for currency
+# IDEAS: more statistics that we can follow: percent of income spent - trends over time
 
 REPORT_COMMANDS = ("enter report command:\n1 --> general stats report\n2 --> one day report\n3 --> choose time"
                    " range\n4 --> total spending\n5 --> expense average\n6 --> average daily spending\n7 -->"

@@ -2,6 +2,7 @@ import openpyxl as xl
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
+import numpy as np
 
 # Set display options to show all columns and rows
 pd.set_option('display.max_columns', None)
@@ -94,13 +95,20 @@ def total_spending(expenses: pd.DataFrame) -> float:
     return expenses['amount'].sum()
 
 
-def get_commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
+def get_commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     """
     Getter function to get all expenses with comments
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame containing all commented expenses
     """
-    return expenses[expenses['comment'].notna()]
+    commented = expenses[expenses['comment'].notna()]
+
+    if commented.empty:
+        print('No commented expenses found.')
+
+        return None
+
+    return commented
 
 
 def top_ten_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
@@ -200,3 +208,53 @@ def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFr
 
     return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
 
+
+def fixed_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
+    """
+    Finds the top 5 most frequent expenses and reports on their frequency, average cost, and total spending
+    :param expenses: pandas DataFrame containing expense data to analyze
+    :return: pandas DataFrame reporting on the top 5 most frequent expenses
+    """
+
+    # IDEA: If the most frequent expense only shows up say 10 times or a statistically insignificant number of times
+    #  we can print "Insufficient data" and exit the function.
+
+    grouped = expenses.groupby('expense')
+    counts = grouped.size()
+    totals = grouped['amount'].sum()
+    averages = totals / counts
+
+    report = pd.DataFrame({
+        'Total Spent': totals,
+        'Average Cost': averages,
+        'Count': counts
+    })
+
+    report.sort_values(by=['Count'], ascending=False, inplace=True)
+
+    return report.iloc[0:5, :]
+
+
+def remove_outliers_percentile(expenses: pd.DataFrame, percentile: int = 99) -> pd.DataFrame:
+    """
+    Removes all values residing above a certain percentile of the given expenses dataset, typically used to remove
+    entries that are extremely high in amount
+    :param percentile: integer representing a percentile above which entries will be removed (default 99)
+    :param expenses: pandas DataFrame containing expense data
+    :return: pandas DataFrame with the extreme expenses removed
+    """
+
+    value_at_percentile = np.percentile(expenses['amount'], percentile)
+
+    return expenses[expenses['amount'] <= value_at_percentile]
+
+
+def percent_of_income(expenses: pd.DataFrame, income: float) -> float:
+    """
+    Calculates total percentage of income spent.
+    :param expenses: pandas DataFrame containing expense data
+    :param income: float representing total income over the dataset's time range
+    :return: float representing percentage of total income spent rounded to two decimals
+    """
+
+    return round((expenses['amount'].sum() / income) * 100, 2)
