@@ -20,11 +20,10 @@ def load_data(file: str) -> pd.DataFrame:
 
     try:
 
-        file = str(file)
-
         if not file.endswith('.xlsx'):
             raise ValueError('Invalid file format, please enter a file name ending with ".xlsx".')
 
+        # Load workbook and assign the active sheet to a variable
         wb = xl.load_workbook(file)
         ws = wb.active
 
@@ -51,7 +50,7 @@ def load_data(file: str) -> pd.DataFrame:
             }, ignore_index=True)
 
     except FileNotFoundError:
-        print("File wasn't found, please make the file exists in the same directory"
+        print("File wasn't found, please make sure the file exists in the same directory"
               "as main.py. And watch out for typos!")
         exit(1)
 
@@ -64,7 +63,7 @@ def load_data(file: str) -> pd.DataFrame:
     return expenses
 
 
-def daily_average(expenses: pd.DataFrame) -> float:
+def daily_avg(expenses: pd.DataFrame) -> float:
     """
     Calculates the average spending per day.
     :param expenses: Pandas dataframe containing expenses data.
@@ -77,7 +76,7 @@ def daily_average(expenses: pd.DataFrame) -> float:
     return round(total / len(daily_sum), 2)
 
 
-def expenses_average(expenses: pd.DataFrame) -> float:
+def expense_avg(expenses: pd.DataFrame) -> float:
     """
     Calculates the average spending per expense.
     :param expenses: pandas DataFrame containing expense data.
@@ -95,7 +94,7 @@ def total_spending(expenses: pd.DataFrame) -> float:
     return expenses['amount'].sum()
 
 
-def get_commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
+def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     """
     Getter function to get all expenses with comments
     :param expenses: pandas DataFrame containing expense data
@@ -109,18 +108,6 @@ def get_commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
         return None
 
     return commented
-
-
-def top_ten_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
-    """
-    Getter function that retrieves the ten highest expenses in amount of the given dataframe
-    :param expenses: pandas DataFrame containing expense data
-    :return:  pandas DataFrame containing top 10 expenses
-    """
-
-    expenses = expenses.drop_duplicates(subset=['expense']).sort_values(by='amount', ascending=False)
-
-    return expenses.iloc[0:10, ]
 
 
 def expense_type_average(expenses: pd.DataFrame) -> None:
@@ -185,8 +172,8 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
 def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFrame:
     """
     Trims down the time range of an expenses dataframe down to the given start & end dates
-    :param start: string formatted "YYYY-MM-DD" signifying the starting date
-    :param end: string formatted "YYYY-MM-DD" signifying the starting date
+    :param start: string formatted "YYYY-MM-DD" signifying the start date
+    :param end: string formatted "YYYY-MM-DD" signifying the end date
     :param expenses: pandas DataFrame containing expense data to trim down
     :return: pandas DataFrame containing expenses data during the given timeframe only
     """
@@ -201,17 +188,18 @@ def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFr
 
     except ValueError:
         print("Invalid date/s entered. Please try again, making sure the start and end dates are within the provided "
-              "dataset.")
+              "dataset.", end="\n\n")
 
-        # TODO: try again by possibly re-prompting here or re-calling a certain function & ensure prompt explains
-        #  that start date is inclusive and end date is exclusive
+        return pd.DataFrame()
+
+        # TODO: ensure to check if the returned DF is empty to reprompt user
 
     return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
 
 
-def fixed_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
+def frequent_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
     """
-    Finds the top 5 most frequent expenses and reports on their frequency, average cost, and total spending
+    Finds the top ten most frequent expenses and reports on their frequency, average cost, and total spending
     :param expenses: pandas DataFrame containing expense data to analyze
     :return: pandas DataFrame reporting on the top 5 most frequent expenses
     """
@@ -232,7 +220,19 @@ def fixed_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
 
     report.sort_values(by=['Count'], ascending=False, inplace=True)
 
-    return report.iloc[0:5, :]
+    return report.iloc[0:10, :]
+
+
+def top_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
+    """
+    Getter function that retrieves the ten highest expenses in amount of the given dataframe
+    :param expenses: pandas DataFrame containing expense data
+    :return:  pandas DataFrame containing top 10 expenses
+    """
+
+    selection = expenses.drop_duplicates(subset=['expense']).sort_values(by='amount', ascending=False)
+
+    return selection.iloc[0:10, ]
 
 
 def remove_outliers_percentile(expenses: pd.DataFrame, percentile: int = 99) -> pd.DataFrame:

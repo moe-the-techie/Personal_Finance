@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="727bb1a6-694b-44be-8758-a273a1c5030b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Expense_Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/Expense_Analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Expense_Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/expense_analysis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,8 +62,8 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Python.Expense_Analysis">
-    <configuration name="Expense_Analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.scratch">
+    <configuration name="expense_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Personal_Finance" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -77,7 +77,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Expense_Analysis.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\hp\Documents\GitHub\Personal_Finance\expense_analysis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -158,8 +158,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Expense_Analysis" />
         <item itemvalue="Python.scratch" />
+        <item itemvalue="Python.expense_analysis" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -217,7 +217,8 @@
       <workItem from="1710739609652" duration="23000" />
       <workItem from="1710867282012" duration="7660000" />
       <workItem from="1710967687646" duration="944000" />
-      <workItem from="1711207380614" duration="1794000" />
+      <workItem from="1711207380614" duration="5579000" />
+      <workItem from="1711368756270" duration="4286000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1695809077005</created>
@@ -298,7 +299,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Personal_Finance$test.coverage" NAME="test Coverage Results" MODIFIED="1707987354584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../../Programming/Python" />
-    <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1709752887398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1711371063610" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1711215387681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
