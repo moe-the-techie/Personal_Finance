@@ -60,6 +60,8 @@ def load_data(file: str) -> pd.DataFrame:
 
     expenses.dropna(subset=['amount'])
 
+    print("Dataset loaded.", end="\n\n")
+
     return expenses
 
 

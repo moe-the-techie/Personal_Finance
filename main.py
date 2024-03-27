@@ -2,9 +2,6 @@ import expense_analysis as exal
 import time
 import sys
 
-# TODO: total_stats_report, make sure user is prompted for currency
-# IDEAS: more statistics that we can follow: percent of income spent - trends over time
-
 
 def main():
 
@@ -54,4 +51,26 @@ def reporter(dataset) -> None:
     :param dataset: pandas DataFrame containing expenses data loaded using load_data
     """
 
-    # TODO: full commands list, UX design, interactivity & prompt handling.
+    main_menu = ("Choose one of the following navigation options:\n0 -> Modify dataset.\n1 -> Expense type stats.\n2 ->"
+                 " General stats.\n3 -> Expense standouts.\n4 -> Miscellaneous stats.\n\nYour choice: ")
+
+    submenu_0 = ("Modify dataset:\n1 -> Set dataset currency.\n2 -> Change time-range.\n3 -> Statistical outliers.\nr -"
+                 "> Return to main menu.\n\nYour choice: ")
+
+    submenu_1 = ("Expense type stats:\n1 -> Expense type average (bar chart).\n2 -> Expense type sum (bar chart).\nr ->"
+                 " Return to main menu.\n\nYour choice: ")
+
+    submenu_2 = ("General stats:\n1 -> Total spending.\n2 -> Average spending per-expense.\n3 -> Average spending per-"
+                 "custom time unit.\nr -> Return to main menu.\n\nYour choice: ")
+
+    submenu_3 = ("Expense standouts:\n1 -> Most frequent expenses.\n2 -> Most expensive expenses.\n3 ->"
+                 "Commented expenses.\nr -> Return to main menu.\n\nYour choice: ")
+
+    submenu_4 = "Miscellaneous stats:\n1 -> Percentage of income spent.\nr -> Return to main menu.\n\nYour choice: "
+
+    command = input(main_menu)
+
+    while not command.isnumeric() or command not in ['0', '1', '2', '3', '4']:
+        command = input('\nInvalid command entered, please try again: ')
+
+    # TODO: interactivity & prompt handling, ensure reporting works as intended.
