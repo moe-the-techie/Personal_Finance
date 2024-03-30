@@ -43,7 +43,7 @@ def load_data(file: str) -> pd.DataFrame:
             # Appending data
             expenses = expenses._append({
                 'expense': row[0].value,
-                'amount': float(row[1].value),
+                'amount': round(float(row[1].value), 2),
                 'type': tuple(row[2].value.split(',')),
                 'comment': row[3].value,
                 'date': dt.datetime.strptime(row[4].value, '%B %d, %Y').date()
@@ -173,28 +173,18 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
 
 def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFrame:
     """
-    Trims down the time range of an expenses dataframe down to the given start & end dates
-    :param start: string formatted "YYYY-MM-DD" signifying the start date
-    :param end: string formatted "YYYY-MM-DD" signifying the end date
+    Trims down the time range of an expenses dataframe down to the given start (inclusive) & end (exclusive) dates
+    :param start: string formatted "YYYY-MM-DD" signifying the start date (included)
+    :param end: string formatted "YYYY-MM-DD" signifying the end date (excluded)
     :param expenses: pandas DataFrame containing expense data to trim down
     :return: pandas DataFrame containing expenses data during the given timeframe only
     """
 
-    try:
-        # Convert start and end dates to datetime.date objects
-        start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-        end = dt.datetime.strptime(end, "%Y-%m-%d").date()
+    # Convert start and end dates to datetime.date objects
+    start = dt.datetime.strptime(start, "%Y-%m-%d").date()
+    end = dt.datetime.strptime(end, "%Y-%m-%d").date()
 
-        if start > end or start not in expenses['date'].values or end not in expenses['date'].values or end == start:
-            raise ValueError
-
-    except ValueError:
-        print("Invalid date/s entered. Please try again, making sure the start and end dates are within the provided "
-              "dataset.", end="\n\n")
-
-        return pd.DataFrame()
-
-        # TODO: ensure to check if the returned DF is empty to reprompt user
+    # TODO: ensure to check if the returned DF is empty to reprompt user
 
     return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
 
