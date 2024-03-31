@@ -1,6 +1,5 @@
 import expense_analysis as exal
 import time
-import sys
 import re
 
 
@@ -140,7 +139,7 @@ def reporter(dataset) -> None:
             raise NotImplementedError
 
         else:
-            #TODO: return to main menu
+            # TODO: return to main menu
             raise NotImplementedError
 
     elif command == '3':
@@ -148,6 +147,21 @@ def reporter(dataset) -> None:
 
         command = prompt(['1', '2', '3', 'r'])
 
+        if command == '1':
+            print("Top 10 most frequent expenses:")
+            print(exal.frequent_expenses(dataset))
+
+        elif command == '2':
+            print("Top 10 most expensive expenses:")
+            print(exal.top_expenses(dataset))
+
+        elif command == '3':
+            print("Commented expenses:")
+            print(exal.commented_expenses(dataset))
+
+        else:
+            # TODO: return to main menu
+            raise NotImplementedError
     else:
         print(submenu_4)
 
