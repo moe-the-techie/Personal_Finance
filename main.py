@@ -77,30 +77,50 @@ def reporter(dataset) -> None:
 
             date_format = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
-            while not date_format.match(start) or not date_format.match(end):
-                print("Invalid date format entered, please try again.")
+            while start == end or start not in dataset['date'].values or end not in dataset['date'].values:
+                if start == end:
+                    print("Start and end dates cannot be the same, please try again", end="\n\n")
 
-                start = input("Start date (inclusive): ")
-                end = input("End date (exclusive): ")
+                if start not in dataset['date'].values or end not in dataset['date'].values:
+                    print("Make sure dates entered are present within the provided dataset.", end="\n\n")
 
-            if start == end:
-                # TODO: consider changing this (and the others below) to reprompt user instead of returning to main menu
-                print("Start & end dates cannot be the same. Returning to main menu...")
+                while not date_format.match(start) or not date_format.match(end):
+                    print("Invalid date format entered, please try again.")
 
-            if start not in dataset['date'].values or end not in dataset['date'].values:
-                print("Dates entered are not present in dataset. Returning to main menu...")
+                    start = input("Start date (inclusive): ")
+                    end = input("End date (exclusive): ")
 
-            # Ensures end and start dates are assigned correctly
-            if start > end:
-                tmp = start
-                start = end
-                end = tmp
+            tmp = dataset
 
             dataset = exal.change_time_range(start=start, end=end, expenses=dataset)
 
+            if dataset.isempty:
+                print("No data found in given time range, reverting changes...")
+
+                dataset = tmp
+
         if command == '3':
-            # TODO: give user instructions on how outliers affect data integrity and how expense_analysis handles them
-            raise NotImplementedError
+
+            print("Outliers are extreme data points in your expense data that can skew or alter the statistical "
+                  "properties of the dataset, to avoid that, expense analysis system removes the top 1% of the data "
+                  "which means the most expensive things in the dataset (Which tend to be outliers) are removed, "
+                  "which means that only the very extreme values will be removed and the rest of the data will be "
+                  "untouched.\n\nKindly note that the operation of removing outliers only takes place when calculating"
+                  "averages or dealing with expense-type related stats to ensure data integrity.", end="\n\n")
+
+            print("Would you like to force stop outlier handling system? (y/n): ")
+
+            answer = input().lower()
+
+            if answer in ['y', 'yes']:
+                exal.handle_outliers = False
+
+                print("\nOutlier handling system: OFF")
+
+            else:
+                exal.handle_outliers = True
+
+                print("\nOutlier handling system: ON")
 
         else:
             # TODO: return to main menu
@@ -166,6 +186,20 @@ def reporter(dataset) -> None:
         print(submenu_4)
 
         command = prompt(['1', 'r'])
+
+        if command == '1':
+            income = input("Enter income over the time span of the database: ")
+
+            while not income.isnumeric():
+                income = input("Please make sure to enter income correctly (do not include decimal points or commas): ")
+
+            income = int(income)
+
+            print(exal.percent_of_income(dataset, income))
+
+        else:
+            # TODO: return to main menu
+            raise NotImplementedError
 
     # TODO: interactivity & prompt handling, testing.
 

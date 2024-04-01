@@ -8,6 +8,8 @@ import numpy as np
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
+handle_outliers = True
+
 
 def load_data(file: str) -> pd.DataFrame:
     """
@@ -184,7 +186,11 @@ def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFr
     start = dt.datetime.strptime(start, "%Y-%m-%d").date()
     end = dt.datetime.strptime(end, "%Y-%m-%d").date()
 
-    # TODO: ensure to check if the returned DF is empty to reprompt user
+    # Ensures end and start dates are assigned correctly
+    if start > end:
+        tmp = start
+        start = end
+        end = tmp
 
     return expenses[(start <= expenses['date']) & (expenses['date'] < end)]
 
@@ -227,25 +233,24 @@ def top_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
     return selection.iloc[0:10, ]
 
 
-def remove_outliers_percentile(expenses: pd.DataFrame, percentile: int = 99) -> pd.DataFrame:
+def remove_outliers_percentile(expenses: pd.DataFrame) -> pd.DataFrame:
     """
-    Removes all values residing above a certain percentile of the given expenses dataset, typically used to remove
+    Removes all values residing above the 99th percentile of the given expenses dataset, typically used to remove
     entries that are extremely high in amount
-    :param percentile: integer representing a percentile above which entries will be removed (default 99)
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame with the extreme expenses removed
     """
 
-    value_at_percentile = np.percentile(expenses['amount'], percentile)
+    value_at_percentile = np.percentile(expenses['amount'], 99)
 
-    return expenses[expenses['amount'] <= value_at_percentile]
+    return expenses[expenses['amount'] <= value_at_percentile] if handle_outliers else expenses
 
 
-def percent_of_income(expenses: pd.DataFrame, income: float) -> float:
+def percent_of_income(expenses: pd.DataFrame, income: int) -> float:
     """
     Calculates total percentage of income spent.
     :param expenses: pandas DataFrame containing expense data
-    :param income: float representing total income over the dataset's time range
+    :param income: int representing total income over the dataset's time range
     :return: float representing percentage of total income spent rounded to two decimals
     """
 
