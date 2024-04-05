@@ -104,7 +104,7 @@ def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame containing all commented expenses
     """
-    commented = expenses[expenses['comment'].notna()]
+    commented = expenses.dropna(subset=['comment']).reset_index()
 
     if commented.empty:
         print('No commented expenses found.')
