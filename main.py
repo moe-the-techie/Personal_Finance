@@ -37,7 +37,7 @@ def reporter(dataset) -> None:
     :param dataset: pandas DataFrame containing expenses data loaded using load_data
     """
 
-    currency = "USD"
+    currency = exal.set_currency("USD")
 
     main_menu = ("Choose one of the following navigation options:\n0 -> Modify dataset.\n1 -> Expense type stats.\n2 ->"
                  " General stats.\n3 -> Expense standouts.\n4 -> Miscellaneous stats.\nq: Quit Personal Finance 2.0.\n"
@@ -69,7 +69,7 @@ def reporter(dataset) -> None:
         command = prompt(['1', '2', '3', 'r'])
 
         if command == '1':
-            currency = input("Currency (e.g. USD, EUR, CAD): ")
+            currency = exal.set_currency(input("Currency (e.g. USD, EUR, CAD): "))
 
         if command == '2':
             start = input("Start date (inclusive): ")
@@ -214,6 +214,6 @@ def prompt(options: list) -> str:
     command = ''
 
     while command not in options:
-        command = input('\nInvalid command entered, please try again: ')
+        command = input('\nInvalid command entered, please try again: ').lower()
 
-    return command.lower()
+    return command

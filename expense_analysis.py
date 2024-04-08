@@ -10,6 +10,8 @@ pd.set_option('display.max_rows', None)
 
 handle_outliers = True
 
+currency = "USD"
+
 
 def load_data(file: str) -> pd.DataFrame:
     """
@@ -65,6 +67,19 @@ def load_data(file: str) -> pd.DataFrame:
     print("Dataset loaded.", end="\n\n")
 
     return expenses
+
+
+def set_currency(in_currency: str) -> str:
+    """
+    Changes system currency to a given value and returns it to be changed in other scopes
+    :param in_currency: str representing desired currency value
+    :return: str representing capitalized notation of currency
+    """
+    global currency
+
+    currency = in_currency.upper()
+
+    return currency
 
 
 def daily_avg(expenses: pd.DataFrame) -> float:
@@ -160,11 +175,11 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
     # Touch-ups to plot depending on whether we're displaying total spending or average spending data
     if total:
         plt.title('Total Spending Per-Type')
-        plt.ylabel('Total Amount Spent (EGP)')
+        plt.ylabel(f'Total Amount Spent ({currency})')
 
     else:
         plt.title('Average Spending Per-Type')
-        plt.ylabel('Average Amount Spent (EGP)')
+        plt.ylabel(f'Average Amount Spent ({currency})')
 
     plt.xlabel('Expense Type/s')
     plt.tight_layout()
