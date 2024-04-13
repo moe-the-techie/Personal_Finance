@@ -57,151 +57,157 @@ def reporter(dataset) -> None:
 
     submenu_4 = "Miscellaneous stats:\n1 -> Percentage of income spent.\nr -> Return to main menu.\n\nYour choice: "
 
-    print(main_menu)
-
-    command = prompt(['0', '1', '2', '3', '4', 'q'])
+    print(main_menu, end='')
 
     # TODO: check if the nested if conditions below can be simplified into a matrix design (DP)
 
-    if command == '0':
-        print(submenu_0)
+    while True:
 
-        command = prompt(['1', '2', '3', 'r'])
+        command = prompt(['0', '1', '2', '3', '4', 'q'])
 
-        if command == '1':
-            currency = exal.set_currency(input("Currency (e.g. USD, EUR, CAD): "))
+        if command == 'q':
+            print("Thanks for using Personal Finance 2.0!\n")
+            exit(0)
 
-        if command == '2':
-            start = input("Start date (inclusive): ")
-            end = input("End date (exclusive): ")
+        elif command == '0':
+            print(submenu_0, end='')
 
-            date_format = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+            command = prompt(['1', '2', '3', 'r'])
 
-            while start == end or start not in dataset['date'].values or end not in dataset['date'].values:
-                if start == end:
-                    print("Start and end dates cannot be the same, please try again", end="\n\n")
+            if command == '1':
+                currency = exal.set_currency(input("Currency (e.g. USD, EUR, CAD): "))
 
-                if start not in dataset['date'].values or end not in dataset['date'].values:
-                    print("Make sure dates entered are present within the provided dataset.", end="\n\n")
+            if command == '2':
+                start = input("Start date (inclusive): ")
+                end = input("End date (exclusive): ")
 
-                while not date_format.match(start) or not date_format.match(end):
-                    print("Invalid date format entered, please try again.")
+                date_format = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
-                    start = input("Start date (inclusive): ")
-                    end = input("End date (exclusive): ")
+                while start == end or start not in dataset['date'].values or end not in dataset['date'].values:
+                    if start == end:
+                        print("Start and end dates cannot be the same, please try again", end="\n\n")
 
-            tmp = dataset
+                    if start not in dataset['date'].values or end not in dataset['date'].values:
+                        print("Make sure dates entered are present within the provided dataset.", end="\n\n")
 
-            dataset = exal.change_time_range(start=start, end=end, expenses=dataset)
+                    while not date_format.match(start) or not date_format.match(end):
+                        print("Invalid date format entered, please try again.")
 
-            if dataset.isempty:
-                print("No data found in given time range, reverting changes...")
+                        start = input("Start date (inclusive): ")
+                        end = input("End date (exclusive): ")
 
-                dataset = tmp
+                tmp = dataset
 
-        if command == '3':
+                dataset = exal.change_time_range(start=start, end=end, expenses=dataset)
 
-            print("Outliers are extreme data points in your expense data that can skew or alter the statistical "
-                  "properties of the dataset, to avoid that, expense analysis system removes the top 1% of the data "
-                  "which means the most expensive things in the dataset (Which tend to be outliers) are removed, "
-                  "which means that only the very extreme values will be removed and the rest of the data will be "
-                  "untouched.\n\nKindly note that the operation of removing outliers only takes place when calculating"
-                  "averages or dealing with expense-type related stats to ensure data integrity.", end="\n\n")
+                if dataset.isempty:
+                    print("No data found in given time range, reverting changes...")
 
-            print("Would you like to force stop outlier handling system? (y/n): ")
+                    dataset = tmp
 
-            answer = input().lower()
+            if command == '3':
 
-            if answer in ['y', 'yes']:
-                exal.handle_outliers = False
+                print("Outliers are extreme data points in your expense data that can skew or alter the statistical "
+                      "properties of the dataset, to avoid that, expense analysis system removes the top 1% of the data"
+                      " which means the most expensive things in the dataset (Which tend to be outliers) are removed, "
+                      "which means that only the very extreme values will be removed and the rest of the data will be "
+                      "untouched.\n\nKindly note that the operation of removing outliers only takes place when "
+                      "calculating averages or dealing with expense-type related stats to ensure data integrity.",
+                      end="\n\n")
 
-                print("\nOutlier handling system: OFF")
+                print("Would you like to force stop outlier handling system? (y/n): ", end='')
+
+                answer = input().lower()
+
+                if answer in ['y', 'yes']:
+                    exal.handle_outliers = False
+
+                    print("\nOutlier handling system: OFF")
+
+                else:
+                    exal.handle_outliers = True
+
+                    print("\nOutlier handling system: ON")
 
             else:
-                exal.handle_outliers = True
+                continue
 
-                print("\nOutlier handling system: ON")
+        elif command == '1':
+            print(submenu_1, end='')
 
-        else:
-            # TODO: return to main menu
-            raise NotImplementedError
+            command = prompt(['1', '2', 'r'])
 
-    elif command == '1':
-        print(submenu_1)
+            if command == '1':
 
-        command = prompt(['1', '2', 'r'])
+                exal.expense_type_averages(dataset)
 
-        if command == '1':
+            elif command == '2':
 
-            exal.expense_type_average(dataset)
+                exal.expense_type_totals(dataset)
 
-        elif command == '2':
-
-            exal.expense_type_total(dataset)
-
-        else:
-            # TODO: return to main menu
-            raise NotImplementedError
-
-    elif command == '2':
-        print(submenu_2)
-
-        command = prompt(['1', '2', '3', 'r'])
-
-        if command == '1':
-            print("Total spending: " + str(exal.total_spending(dataset)) + currency)
+            else:
+                continue
 
         elif command == '2':
-            print("Average spending per-expense: " + str(exal.expense_avg(dataset)) + currency)
+            print(submenu_2, end='')
 
-        elif command == "3":
-            # TODO: modify exal function to support custom time unit, prompt user for said time unit, print the output.
-            raise NotImplementedError
+            command = prompt(['1', '2', '3', 'r'])
 
-        else:
-            # TODO: return to main menu
-            raise NotImplementedError
+            if command == '1':
+                print("Total spending: " + str(exal.total_spending(dataset)) + currency)
 
-    elif command == '3':
-        print(submenu_3)
+            elif command == '2':
+                print("Average spending per-expense: " + str(exal.expense_avg(dataset)) + currency)
 
-        command = prompt(['1', '2', '3', 'r'])
+            elif command == "3":
+                print("Enter time interval in days: ")
+                interval = int(prompt(list(range(len(dataset.groupby('date'))+1))))
 
-        if command == '1':
-            print("Top 10 most frequent expenses:")
-            print(exal.frequent_expenses(dataset))
+                print(f"Average spending per every {interval} day/s: " +
+                      str(exal.avg_per_unit(dataset,interval=interval)) + currency)
 
-        elif command == '2':
-            print("Top 10 most expensive expenses:")
-            print(exal.top_expenses(dataset))
+            else:
+                continue
 
         elif command == '3':
-            print("Commented expenses:")
-            print(exal.commented_expenses(dataset))
+            print(submenu_3, end='')
 
+            command = prompt(['1', '2', '3', 'r'])
+
+            if command == '1':
+                print("Top 10 most frequent expenses:")
+                print(exal.frequent_expenses(dataset))
+
+            elif command == '2':
+                print("Top 10 most expensive expenses:")
+                print(exal.top_expenses(dataset))
+
+            elif command == '3':
+                print("Commented expenses:")
+                print(exal.commented_expenses(dataset))
+
+            else:
+                continue
         else:
-            # TODO: return to main menu
-            raise NotImplementedError
-    else:
-        print(submenu_4)
+            print(submenu_4, end='')
 
-        command = prompt(['1', 'r'])
+            command = prompt(['1', 'r'])
 
-        if command == '1':
-            income = input("Enter income over the time span of the database: ")
+            if command == '1':
+                income = input("Enter income over the time span of the database: ")
 
-            while not income.isnumeric():
-                income = input("Please make sure to enter income correctly (do not include decimal points or commas): ")
+                while not income.isnumeric():
+                    income = input("Please make sure to enter income correctly (do not include decimal points or "
+                                   "commas): ")
 
-            income = int(income)
+                income = int(income)
 
-            print(exal.percent_of_income(dataset, income))
+                print(exal.percent_of_income(dataset, income))
 
-        else:
-            # TODO: return to main menu
-            raise NotImplementedError
+            else:
+                continue
 
-    # TODO: interactivity & prompt handling, testing.
+    # TODO: testing.
 
 
 def prompt(options: list) -> str:
@@ -211,7 +217,7 @@ def prompt(options: list) -> str:
     :return: str containing outputted command converted to lowercase if command is a char
     """
 
-    command = ''
+    command = input()
 
     while command not in options:
         command = input('\nInvalid command entered, please try again: ').lower()

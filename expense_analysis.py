@@ -1,18 +1,24 @@
 import openpyxl as xl
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 import datetime as dt
 import numpy as np
+from PIL import Image
 
 # Set display options to show all columns and rows
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-handle_outliers = True
+# Using Agg Renderer to generate plots
+matplotlib.use('agg')
 
+# Defaults for handling outliers and currency
+handle_outliers = True
 currency = "USD"
 
 
+# TODO: consider the two remaining ideas in this file
 def load_data(file: str) -> pd.DataFrame:
     """
     Loads the data from the given Excel file into a pandas DataFrame.
@@ -71,7 +77,7 @@ def load_data(file: str) -> pd.DataFrame:
 
 def set_currency(in_currency: str) -> str:
     """
-    Changes system currency to a given value and returns it to be changed in other scopes
+    Changes system currency to a given value and returns it to be changed in other scopes.
     :param in_currency: str representing desired currency value
     :return: str representing capitalized notation of currency
     """
@@ -82,40 +88,48 @@ def set_currency(in_currency: str) -> str:
     return currency
 
 
-def daily_avg(expenses: pd.DataFrame) -> float:
+def avg_per_unit(expenses: pd.DataFrame, interval: int) -> float:
     """
-    Calculates the average spending per day.
-    :param expenses: Pandas dataframe containing expenses data.
-    :return: float representing average spending per day, rounded to two digits past the decimal place.
+    Calculates the average spending per a given interval of time (in days).
+    :param expenses: pandas dataframe containing expenses data
+    :param interval: integer representing number of days on which the average is calculated
+    :return: float representing average spending per day, rounded to two digits past the decimal place
     """
-    daily_sum = expenses.groupby('date')['amount'].sum()
 
-    total = daily_sum.sum()
+    expenses = remove_outliers_percentile(expenses)
 
-    return round(total / len(daily_sum), 2)
+    grouped = expenses.groupby('date')
+
+    n_intervals = len(grouped) / interval
+
+    total = total_spending(expenses)
+
+    return round(total / n_intervals, 2)
 
 
 def expense_avg(expenses: pd.DataFrame) -> float:
     """
     Calculates the average spending per expense.
-    :param expenses: pandas DataFrame containing expense data.
-    :return: float representing average spending per expense, rounded to two digits past the decimal place.
+    :param expenses: pandas DataFrame containing expense data
+    :return: float representing average spending per expense, rounded to two digits past the decimal place
     """
+    expenses = remove_outliers_percentile(expenses)
+
     return round(expenses['amount'].sum() / len(expenses), 2)
 
 
 def total_spending(expenses: pd.DataFrame) -> float:
     """
     Calculates the total spending over the time range of the given dataframe.
-    :param expenses: pandas DataFrame containing expense data.
-    :return: float representing the total spending.
+    :param expenses: pandas DataFrame containing expense data
+    :return: float representing the total spending
     """
     return expenses['amount'].sum()
 
 
 def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     """
-    Getter function to get all expenses with comments
+    Getter function to get all expenses with comments.
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame containing all commented expenses
     """
@@ -129,9 +143,9 @@ def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     return commented
 
 
-def expense_type_average(expenses: pd.DataFrame) -> None:
+def expense_type_averages(expenses: pd.DataFrame) -> None:
     """
-    Plotting function that generates a bar chart of the average spending of each expense type in the given dataframe
+    Plotting function that generates a bar chart of the average spending of each expense type in the given dataframe.
     :param expenses: pandas DataFrame containing expense data
     """
 
@@ -141,16 +155,14 @@ def expense_type_average(expenses: pd.DataFrame) -> None:
     plot_type_data(per_type_average)
 
 
-def expense_type_total(expenses: pd.DataFrame) -> None:
+def expense_type_totals(expenses: pd.DataFrame) -> None:
     """
-    Plotting function that generates a bar chart of the total spending of each expense type in the given dataframe
+    Plotting function that generates a bar chart of the total spending of each expense type in the given dataframe.
     :param expenses: pandas DataFrame containing expense data
     """
     per_type_total = expenses.groupby('type')['amount'].sum()
 
     plot_type_data(per_type_total, total=True)
-
-    print("Plot generated successfully.")
 
 
 def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
@@ -167,25 +179,40 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
     # Adjust plot image size
     plt.figure(figsize=(12, 8))
 
-    grouped_data.plot(x='type', y='amount', kind='bar')
+    bars = grouped_data.plot(x='type', y='amount', kind='bar')
 
     # Use the expense_types list as the ticks for x-axis
     plt.xticks(range(len(expense_types)), expense_types, rotation=90)
 
     # Touch-ups to plot depending on whether we're displaying total spending or average spending data
     if total:
-        plt.title('Total Spending Per-Type')
+        plt.title('Total Spending')
         plt.ylabel(f'Total Amount Spent ({currency})')
 
     else:
-        plt.title('Average Spending Per-Type')
+        plt.title('Average Spending')
         plt.ylabel(f'Average Amount Spent ({currency})')
 
-    plt.xlabel('Expense Type/s')
-    plt.tight_layout()
-    plt.show()
+    plt.xlabel('Expense Type')
 
-    print("Plot generated successfully.")
+    for bar in bars.patches:
+        plt.annotate(str(round(bar.get_height())),
+                     (bar.get_x() + bar.get_width() / 2,
+                      bar.get_height()),
+                     ha='center',
+                     va='center',
+                     xytext=(0, 5),
+                     textcoords='offset points')
+
+    plt.tight_layout()
+
+    plt.savefig(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart")
+
+    print(f"Plot generated successfully. Opening 'expense-type-chart'...")
+
+    # Open the image file using PIL and display it
+    img = Image.open(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart.png")
+    img.show()
 
 
 def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFrame:
@@ -251,14 +278,20 @@ def top_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
 def remove_outliers_percentile(expenses: pd.DataFrame) -> pd.DataFrame:
     """
     Removes all values residing above the 99th percentile of the given expenses dataset, typically used to remove
-    entries that are extremely high in amount
+    entries that are extremely high in amount.
     :param expenses: pandas DataFrame containing expense data
     :return: pandas DataFrame with the extreme expenses removed
     """
 
+    if handle_outliers:
+        print("Removing outliers...", end='\n\n')
+
+    else:
+        return expenses
+
     value_at_percentile = np.percentile(expenses['amount'], 99)
 
-    return expenses[expenses['amount'] <= value_at_percentile] if handle_outliers else expenses
+    return expenses[expenses['amount'] <= value_at_percentile]
 
 
 def percent_of_income(expenses: pd.DataFrame, income: int) -> float:
