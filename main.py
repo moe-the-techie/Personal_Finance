@@ -1,30 +1,29 @@
 import expense_analysis as exal
-import time
 import re
+from tabulate import tabulate
+
+# Setting initial currency.
+currency = exal.set_currency("USD")
 
 
 def main():
 
-    print("Welcome to Personal Finance 2.0! To get started, enter command 'h' to see supported commands!.", end="\n\n")
+    print("\nWelcome to Personal Finance 2.0! To get started, enter one of the following commands:\n"
+          "e: launches expense analysis system\na: prints about developer.")
 
-    command = prompt(['h', 'e', 'a'])
+    print("Your choice: ", end="")
 
-    if command == 'h':
+    command = prompt(['e', 'a'])
 
-        print("\nCommand List:\n1. h: prints supported commands list\n2. e: launches expense analysis system\n3. a: "
-              "prints about me")
-
-        time.sleep(5)
-
-        exit(0)
-
-    elif command == 'a':
-        # TODO: revamp about me
-        print()
+    if command == 'a':
+        print("\nHello there! My name is Momen Ahmed (Moe), I'm a passionate software developer with one year of "
+              "experience in Python software development using libraries such as openpyxl,\nnumpy, and pandas for data "
+              "analysis. Personal Finance 2.0 is the second iteration of my first solo project.\nYou can find me at "
+              "@moethetechie on github, discord, and stackoverflow.")
 
     else:
 
-        file = str(input('Enter dataset file name (must be .xlsx): '))
+        file = str(input('Enter expense Excel file name (must end with .xlsx): '))
 
         dataset = exal.load_data(file)
 
@@ -37,14 +36,14 @@ def reporter(dataset) -> None:
     :param dataset: pandas DataFrame containing expenses data loaded using load_data
     """
 
-    currency = exal.set_currency("USD")
+    global currency
 
-    main_menu = ("Choose one of the following navigation options:\n0 -> Modify dataset.\n1 -> Expense type stats.\n2 ->"
-                 " General stats.\n3 -> Expense standouts.\n4 -> Miscellaneous stats.\nq: Quit Personal Finance 2.0.\n"
-                 "\nYour choice: ")
+    main_menu = ("Choose one of the following navigation options:\n1 -> Expense type stats.\n2 -> "
+                 "General stats.\n3 -> Expense standouts.\n4 -> Miscellaneous stats.\n0 -> Modify dataset."
+                 "\nq: Quit Personal Finance 2.0.\n\nYour choice: ")
 
-    submenu_0 = ("Modify dataset:\n1 -> Set dataset currency (default: USD).\n2 -> Change time-range.\n3 -> Statistical"
-                 " outliers.\nr -> Return to main menu.\n\nYour choice: ")
+    submenu_0 = (f"Modify dataset:\n1 -> Set dataset currency (default: {currency}).\n2 -> Change time-range.\n3 -> "
+                 f"Statistical outliers.\nr -> Return to main menu.\n\nYour choice: ")
 
     submenu_1 = ("Expense type stats:\n1 -> Expense type average (bar chart).\n2 -> Expense type sum (bar chart).\nr ->"
                  " Return to main menu.\n\nYour choice: ")
@@ -52,21 +51,19 @@ def reporter(dataset) -> None:
     submenu_2 = ("General stats:\n1 -> Total spending.\n2 -> Average spending per-expense.\n3 -> Average spending per-"
                  "custom time unit.\nr -> Return to main menu.\n\nYour choice: ")
 
-    submenu_3 = ("Expense standouts:\n1 -> Most frequent expenses.\n2 -> Most expensive expenses.\n3 ->"
+    submenu_3 = ("Expense standouts:\n1 -> Most frequent expenses.\n2 -> Most expensive expenses.\n3 -> "
                  "Commented expenses.\nr -> Return to main menu.\n\nYour choice: ")
 
     submenu_4 = "Miscellaneous stats:\n1 -> Percentage of income spent.\nr -> Return to main menu.\n\nYour choice: "
 
-    print(main_menu, end='')
-
-    # TODO: check if the nested if conditions below can be simplified into a matrix design (DP)
-
     while True:
+
+        print(main_menu, end='')
 
         command = prompt(['0', '1', '2', '3', '4', 'q'])
 
         if command == 'q':
-            print("Thanks for using Personal Finance 2.0!\n")
+            print("Thanks for using Personal Finance 2.0!")
             exit(0)
 
         elif command == '0':
@@ -75,42 +72,47 @@ def reporter(dataset) -> None:
             command = prompt(['1', '2', '3', 'r'])
 
             if command == '1':
+
                 currency = exal.set_currency(input("Currency (e.g. USD, EUR, CAD): "))
 
+                print(f"Currency set to {currency}.", end="\n\n")
+
             if command == '2':
-                start = input("Start date (inclusive): ")
-                end = input("End date (exclusive): ")
+                start = input("Start date in the format 'YYYY-MM-DD' (inclusive): ")
+                end = input("End date in the format 'YYYY-MM-DD' (exclusive): ")
 
                 date_format = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
-                while start == end or start not in dataset['date'].values or end not in dataset['date'].values:
+                # Ensure correct date format is entered.
+                while start == end or not date_format.match(start) or not date_format.match(end):
+
                     if start == end:
                         print("Start and end dates cannot be the same, please try again", end="\n\n")
 
-                    if start not in dataset['date'].values or end not in dataset['date'].values:
-                        print("Make sure dates entered are present within the provided dataset.", end="\n\n")
-
-                    while not date_format.match(start) or not date_format.match(end):
+                    if not date_format.match(start) or not date_format.match(end):
                         print("Invalid date format entered, please try again.")
 
-                        start = input("Start date (inclusive): ")
-                        end = input("End date (exclusive): ")
+                    start = input("Start date in the format 'YYYY-MM-DD' (inclusive): ")
+                    end = input("End date in the format 'YYYY-MM-DD' (exclusive): ")
 
                 tmp = dataset
 
                 dataset = exal.change_time_range(start=start, end=end, expenses=dataset)
 
-                if dataset.isempty:
-                    print("No data found in given time range, reverting changes...")
+                if dataset.empty:
+                    print("No data found in given time range, reverting changes...", end="\n\n")
 
                     dataset = tmp
 
+                else:
+                    print("Dataset time range updated successfully.", end="\n\n")
+
             if command == '3':
 
-                print("Outliers are extreme data points in your expense data that can skew or alter the statistical "
+                print("\nOutliers are extreme data points in your expense data that can skew or alter the statistical "
                       "properties of the dataset, to avoid that, expense analysis system removes the top 1% of the data"
-                      " which means the most expensive things in the dataset (Which tend to be outliers) are removed, "
-                      "which means that only the very extreme values will be removed and the rest of the data will be "
+                      "\nwhich means the most expensive things in the dataset (Which tend to be outliers) are removed, "
+                      "meaning that only the very extreme values will be removed and the rest of the data will be "
                       "untouched.\n\nKindly note that the operation of removing outliers only takes place when "
                       "calculating averages or dealing with expense-type related stats to ensure data integrity.",
                       end="\n\n")
@@ -122,12 +124,12 @@ def reporter(dataset) -> None:
                 if answer in ['y', 'yes']:
                     exal.handle_outliers = False
 
-                    print("\nOutlier handling system: OFF")
+                    print("\nOutlier handling system: OFF", end="\n\n")
 
                 else:
                     exal.handle_outliers = True
 
-                    print("\nOutlier handling system: ON")
+                    print("\nOutlier handling system: ON", end="\n\n")
 
             else:
                 continue
@@ -154,17 +156,17 @@ def reporter(dataset) -> None:
             command = prompt(['1', '2', '3', 'r'])
 
             if command == '1':
-                print("Total spending: " + str(exal.total_spending(dataset)) + currency)
+                print("Total spending: " + str(exal.total_spending(dataset)) + currency, end="\n\n")
 
             elif command == '2':
-                print("Average spending per-expense: " + str(exal.expense_avg(dataset)) + currency)
+                print("Average spending per-expense: " + str(exal.expense_avg(dataset)) + currency, end="\n\n")
 
             elif command == "3":
-                print("Enter time interval in days: ")
-                interval = int(prompt(list(range(len(dataset.groupby('date'))+1))))
+                print("Enter time interval in days: ", end='')
+                interval = int(prompt([str(item) for item in list(range(len(dataset.groupby('date'))+1))]))
 
                 print(f"Average spending per every {interval} day/s: " +
-                      str(exal.avg_per_unit(dataset,interval=interval)) + currency)
+                      str(exal.avg_per_unit(dataset, interval=interval)) + currency, end="\n\n")
 
             else:
                 continue
@@ -176,15 +178,15 @@ def reporter(dataset) -> None:
 
             if command == '1':
                 print("Top 10 most frequent expenses:")
-                print(exal.frequent_expenses(dataset))
+                print(tabulate(exal.frequent_expenses(dataset), headers='keys', tablefmt='fancy_grid'), end="\n\n")
 
             elif command == '2':
                 print("Top 10 most expensive expenses:")
-                print(exal.top_expenses(dataset))
+                print(tabulate(exal.top_expenses(dataset), headers='keys', tablefmt='fancy_grid'), end="\n\n")
 
             elif command == '3':
                 print("Commented expenses:")
-                print(exal.commented_expenses(dataset))
+                print(tabulate(exal.commented_expenses(dataset), headers='keys', tablefmt='fancy_grid'), end="\n\n")
 
             else:
                 continue
@@ -202,24 +204,26 @@ def reporter(dataset) -> None:
 
                 income = int(income)
 
-                print(exal.percent_of_income(dataset, income))
+                print("Percentage of income spent: " + str(exal.percent_of_income(dataset, income)), end="%\n\n")
 
             else:
                 continue
-
-    # TODO: testing.
 
 
 def prompt(options: list) -> str:
     """
     Prompts user for input and ensures it's within a list of options.
     :param options: list of options that the command must be within
-    :return: str containing outputted command converted to lowercase if command is a char
+    :return: str containing outputted value converted to lowercase if command is a char
     """
 
-    command = input()
+    value = input()
 
-    while command not in options:
-        command = input('\nInvalid command entered, please try again: ').lower()
+    while value not in options:
+        value = input('\nInvalid value entered, please try again: ').lower()
 
-    return command
+    return value
+
+
+if __name__ == '__main__':
+    main()

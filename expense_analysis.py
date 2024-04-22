@@ -18,7 +18,6 @@ handle_outliers = True
 currency = "USD"
 
 
-# TODO: consider the two remaining ideas in this file
 def load_data(file: str) -> pd.DataFrame:
     """
     Loads the data from the given Excel file into a pandas DataFrame.
@@ -26,12 +25,10 @@ def load_data(file: str) -> pd.DataFrame:
     :return: pandas DataFrame that contains all the data loaded from the file
     """
 
-    # IDEA: We can have a test case here where if the loaded data is none to check if the file is formatted properly
-
     try:
 
         if not file.endswith('.xlsx'):
-            raise ValueError('Invalid file format, please enter a file name ending with ".xlsx".')
+            raise FileNotFoundError()
 
         # Load workbook and assign the active sheet to a variable
         wb = xl.load_workbook(file)
@@ -61,23 +58,29 @@ def load_data(file: str) -> pd.DataFrame:
 
     except FileNotFoundError:
         print("File wasn't found, please make sure the file exists in the same directory"
-              "as main.py. And watch out for typos!")
+              "as main.py, making sure that the file entered ends with '.xlsx'. And watch out for typos!")
         exit(1)
 
-    except ValueError as e:
-        print(e)
+    except ValueError:
+        print("Invalid data format, kindly make sure your .xlsx file is the one exported directly from Notion "
+              "and that it has data stored within it.")
         exit(2)
 
-    expenses.dropna(subset=['amount'])
+    expenses.dropna(subset=['expense', 'amount', 'type', 'date'])
 
     print("Dataset loaded.", end="\n\n")
+
+    if expenses.empty:
+        print("Invalid data format, kindly make sure your .xlsx file is the one exported directly from Notion "
+              "and that it has data stored within it.")
+        exit(2)
 
     return expenses
 
 
 def set_currency(in_currency: str) -> str:
     """
-    Changes system currency to a given value and returns it to be changed in other scopes.
+    Changes system currency to a given value and returns it to be changed in other modules.
     :param in_currency: str representing desired currency value
     :return: str representing capitalized notation of currency
     """
@@ -113,6 +116,7 @@ def expense_avg(expenses: pd.DataFrame) -> float:
     :param expenses: pandas DataFrame containing expense data
     :return: float representing average spending per expense, rounded to two digits past the decimal place
     """
+    # Handle outliers first
     expenses = remove_outliers_percentile(expenses)
 
     return round(expenses['amount'].sum() / len(expenses), 2)
@@ -124,10 +128,10 @@ def total_spending(expenses: pd.DataFrame) -> float:
     :param expenses: pandas DataFrame containing expense data
     :return: float representing the total spending
     """
-    return expenses['amount'].sum()
+    return round(expenses['amount'].sum(), 2)
 
 
-def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
+def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | str:
     """
     Getter function to get all expenses with comments.
     :param expenses: pandas DataFrame containing expense data
@@ -136,9 +140,10 @@ def commented_expenses(expenses: pd.DataFrame) -> pd.DataFrame | None:
     commented = expenses.dropna(subset=['comment']).reset_index()
 
     if commented.empty:
-        print('No commented expenses found.')
 
-        return None
+        return "No commented expenses found."
+
+    commented.drop(columns=['index'], inplace=True)
 
     return commented
 
@@ -208,7 +213,7 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
 
     plt.savefig(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart")
 
-    print(f"Plot generated successfully. Opening 'expense-type-chart'...")
+    print(f"Plot generated successfully. Opening 'expense-type-chart'...", end="\n\n")
 
     # Open the image file using PIL and display it
     img = Image.open(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart.png")
@@ -244,23 +249,25 @@ def frequent_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
     :return: pandas DataFrame reporting on the top 5 most frequent expenses
     """
 
-    # IDEA: If the most frequent expense only shows up say 10 times or a statistically insignificant number of times
-    #  we can print "Insufficient data" and exit the function.
-
     grouped = expenses.groupby('expense')
     counts = grouped.size()
     totals = grouped['amount'].sum()
-    averages = totals / counts
+    averages = round(totals / counts, 2)
 
     report = pd.DataFrame({
         'Total Spent': totals,
         'Average Cost': averages,
-        'Count': counts
+        'Frequency': counts
     })
 
     report.sort_values(by=['Count'], ascending=False, inplace=True)
 
-    return report.iloc[0:10, :]
+    if max(report.Count.values.tolist()) <= 5:
+        print("Notice that the most frequent expense in yor dataset only repeated 5 or less times, for statistical"
+              " significance, try to run Personal Finance 2.0 on a dataset that spans over a long period of time for "
+              "more useful analysis.")
+
+    return report.iloc[0:10, ]
 
 
 def top_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
@@ -272,7 +279,7 @@ def top_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
 
     selection = expenses.drop_duplicates(subset=['expense']).sort_values(by='amount', ascending=False)
 
-    return selection.iloc[0:10, ]
+    return selection.iloc[0:10, [0, 1, 4]].reset_index(drop=True)
 
 
 def remove_outliers_percentile(expenses: pd.DataFrame) -> pd.DataFrame:
@@ -284,7 +291,7 @@ def remove_outliers_percentile(expenses: pd.DataFrame) -> pd.DataFrame:
     """
 
     if handle_outliers:
-        print("Removing outliers...", end='\n\n')
+        print("\nRemoving outliers...", end='\n\n')
 
     else:
         return expenses
