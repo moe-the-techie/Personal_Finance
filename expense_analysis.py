@@ -50,10 +50,10 @@ def load_data(file: str) -> pd.DataFrame:
             # Appending data
             expenses = expenses._append({
                 'expense': row[0].value,
-                'amount': round(float(row[1].value), 2) if row[1].value is not None else None,
-                'type': tuple(row[2].value.split(',')) if row[2].value is not None else None,
+                'amount': round(float(row[1].value), 2) if row[1].value is not None else np.nan,
+                'type': tuple(row[2].value.split(',')) if row[2].value is not None else np.nan,
                 'comment': row[3].value,
-                'date': row[4].value.date() if row[4].value is not None else None
+                'date': row[4].value.date() if row[4].value is not None else np.nan
             }, ignore_index=True)
 
     except FileNotFoundError:
@@ -66,7 +66,7 @@ def load_data(file: str) -> pd.DataFrame:
               "and that it has data stored within it.")
         exit(2)
 
-    expenses.dropna(subset=['expense', 'amount', 'type', 'date'])
+    expenses.dropna(subset=['expense', 'amount', 'type', 'date'], inplace=True)
 
     print("Dataset loaded.", end="\n\n")
 
@@ -260,9 +260,9 @@ def frequent_expenses(expenses: pd.DataFrame) -> pd.DataFrame:
         'Frequency': counts
     })
 
-    report.sort_values(by=['Count'], ascending=False, inplace=True)
+    report.sort_values(by=['Frequency'], ascending=False, inplace=True)
 
-    if max(report.Count.values.tolist()) <= 5:
+    if max(report.Frequency.values.tolist()) <= 5:
         print("Notice that the most frequent expense in yor dataset only repeated 5 or less times, for statistical"
               " significance, try to run Personal Finance 2.0 on a dataset that spans over a long period of time for "
               "more useful analysis.")
