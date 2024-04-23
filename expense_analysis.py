@@ -50,10 +50,10 @@ def load_data(file: str) -> pd.DataFrame:
             # Appending data
             expenses = expenses._append({
                 'expense': row[0].value,
-                'amount': round(float(row[1].value), 2),
-                'type': tuple(row[2].value.split(',')),
+                'amount': round(float(row[1].value), 2) if row[1].value is not None else None,
+                'type': tuple(row[2].value.split(',')) if row[2].value is not None else None,
                 'comment': row[3].value,
-                'date': dt.datetime.strptime(row[4].value, '%B %d, %Y').date()
+                'date': row[4].value.date() if row[4].value is not None else None
             }, ignore_index=True)
 
     except FileNotFoundError:

@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="727bb1a6-694b-44be-8758-a273a1c5030b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/expense_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/expense_analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,8 +183,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.expense_analysis (1)" />
+        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.expense_analysis" />
         <item itemvalue="Python.main" />
       </list>
@@ -272,6 +270,8 @@
       <workItem from="1713627106938" duration="5888000" />
       <workItem from="1713695097335" duration="2284000" />
       <workItem from="1713776996982" duration="6922000" />
+      <workItem from="1713888098878" duration="21000" />
+      <workItem from="1713888763093" duration="976000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1695809077005</created>
@@ -351,11 +351,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="Brainstormed general structure for project &amp; added load_data." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Personal_Finance$expense_analysis.coverage" NAME="expense_analysis Coverage Results" MODIFIED="1713279886806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Personal_Finance$expense_analysis__1_.coverage" NAME="expense_analysis (1) Coverage Results" MODIFIED="1713173049567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$expense_analysis.coverage" NAME="expense_analysis Coverage Results" MODIFIED="1713889610960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$expense_analysis__1_.coverage" NAME="expense_analysis (1) Coverage Results" MODIFIED="1713889565934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Personal_Finance$test.coverage" NAME="test Coverage Results" MODIFIED="1707987354584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../../Programming/Python" />
     <SUITE FILE_PATH="coverage/Personal_Finance$Expense_Analysis.coverage" NAME="Expense_Analysis Coverage Results" MODIFIED="1711215387681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Personal_Finance$main.coverage" NAME="main Coverage Results" MODIFIED="1713779290047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1713778196508" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/Personal_Finance$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1713889661307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
   </component>
 </project>
