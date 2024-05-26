@@ -1,5 +1,5 @@
 *.png
-*.xlsx
+*.csv
 /.idea
 /.idea
 .idea/workspace.xml

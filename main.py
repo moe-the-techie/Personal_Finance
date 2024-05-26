@@ -23,7 +23,7 @@ def main():
 
     else:
 
-        file = str(input('Enter expense Excel file name (must end with .xlsx): '))
+        file = str(input('Enter expense Excel file name (must end with .csv): '))
 
         dataset = exal.load_data(file)
 

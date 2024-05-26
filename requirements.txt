@@ -1,6 +1,5 @@
 pandas
 numpy
-openpyxl
 matplotlib
 pillow
 tabulate

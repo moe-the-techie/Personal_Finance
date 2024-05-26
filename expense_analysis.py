@@ -1,8 +1,7 @@
-import openpyxl as xl
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
-import datetime as dt
+from datetime import datetime as dt
 import numpy as np
 from PIL import Image
 
@@ -21,59 +20,50 @@ currency = "USD"
 def load_data(file: str) -> pd.DataFrame:
     """
     Loads the data from the given Excel file into a pandas DataFrame.
-    :param file: a string containing the name of a '.xlsx' file to load
+    :param file: a string containing the name of a '.csv' file to load
     :return: pandas DataFrame that contains all the data loaded from the file
     """
 
     try:
 
-        if not file.endswith('.xlsx'):
+        if not file.endswith('.csv'):
             raise FileNotFoundError()
 
-        # Load workbook and assign the active sheet to a variable
-        wb = xl.load_workbook(file)
-        ws = wb.active
+        # Load, modify, and validate data
+        expenses = pd.read_csv(file)
 
-        expenses = pd.DataFrame({
-            'expense': [],
-            'amount': [],
-            'type': [],
-            'comment': [],
-            'date': []
-        })
+        names = {'Expense': 'expense',
+                 'Amount': 'amount',
+                 'Type': 'type',
+                 'Comment': 'comment',
+                 'Date': 'date'}
 
-        for i, row in enumerate(ws.iter_rows()):
-            # Skip header row
-            if i == 0:
-                continue
+        expenses.rename(columns=names, inplace=True)
 
-            # Appending data
-            expenses = expenses._append({
-                'expense': row[0].value,
-                'amount': round(float(row[1].value), 2) if row[1].value is not None else np.nan,
-                'type': tuple(row[2].value.split(',')) if row[2].value is not None else np.nan,
-                'comment': row[3].value,
-                'date': row[4].value.date() if row[4].value is not None else np.nan
-            }, ignore_index=True)
+        expenses.dropna(subset=['expense', 'amount', 'type', 'date'], inplace=True)
+
+        if expenses.empty:
+            raise ValueError
+
+        expenses['expense'] = expenses['expense'].apply(lambda x: x.lower().strip())
+
+        expenses['amount'] = expenses['amount'].apply(lambda x: round(x, 2))
+
+        expenses['type'] = expenses['type'].apply(lambda x: tuple(x.split(',')))
+
+        expenses['date'] = expenses['date'].apply(lambda x: dt.strptime(x, "%B %d, %Y").date())
 
     except FileNotFoundError:
         print("File wasn't found, please make sure the file exists in the same directory"
-              "as main.py, making sure that the file entered ends with '.xlsx'. And watch out for typos!")
+              "as main.py, making sure that the file entered ends with '.csv'. And watch out for typos!")
         exit(1)
 
-    except ValueError:
-        print("Invalid data format, kindly make sure your .xlsx file is the one exported directly from Notion "
+    except ValueError or AttributeError:
+        print("Invalid data format, kindly make sure your .csv file is the one exported directly from Notion "
               "and that it has data stored within it.")
         exit(2)
-
-    expenses.dropna(subset=['expense', 'amount', 'type', 'date'], inplace=True)
 
     print("Dataset loaded.", end="\n\n")
-
-    if expenses.empty:
-        print("Invalid data format, kindly make sure your .xlsx file is the one exported directly from Notion "
-              "and that it has data stored within it.")
-        exit(2)
 
     return expenses
 
@@ -230,8 +220,8 @@ def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFr
     """
 
     # Convert start and end dates to datetime.date objects
-    start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-    end = dt.datetime.strptime(end, "%Y-%m-%d").date()
+    start = dt.strptime(start, "%Y-%m-%d").date()
+    end = dt.strptime(end, "%Y-%m-%d").date()
 
     # Ensures end and start dates are assigned correctly
     if start > end:
