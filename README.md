@@ -9,7 +9,7 @@ Welcome to Personal Finance 2.0, an easy-to-use command-line Python script desig
 ### Prerequisites
 
 1. **Notion**: This free note-taking and task management app will be used to record your daily expenses. Download and install Notion from [here](https://notion.so).
-2. **Template**: Use the modular Notion template I created for expense tracking. Duplicate it into your workspace by clicking [this link](https://gelatinous-quince-abe.notion.site/Expenses-Tracking-d2b76ee7b4294dfeb0d8d635cd66403e?pvs=25).
+2. **Template**: Use the modular Notion template I created for expense tracking. Duplicate it into your workspace by clicking [this link](https://gelatinous-quince-abe.notion.site/Expenses-Tracking-TEMPLATE-10ce997e127780cba639f4f06e97e6d8?pvs=4) and clicking on the duplicate icon.
 
 ### Recording and Exporting Expenses
 
