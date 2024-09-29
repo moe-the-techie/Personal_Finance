@@ -15,9 +15,9 @@ Welcome to Personal Finance 2.0, an easy-to-use command-line Python script desig
 
 1. **Record Expenses**: Use the Notion template to log your daily expenses over time.
 2. **Export Data**: Once you have accumulated enough data, export it as a CSV file:
-   - Open the expenses database in Notion.
+   - Open the expenses database in Notion and open the **ALL** table.
    - Click the three dots in the top-right corner.
-   - Select **Export** and choose **Markdown & CSV**.
+   - Select **Export** making sure **Export Format** is **Markdown & CSV** and **Include Databases** is **Current View**.
    - Extract the downloaded ZIP file and locate the CSV file (rename it for simplicity, e.g., `expenses.csv`).
    - Move the CSV file to the directory containing the project files (`main.py`, `expenses.py`, etc.).
 
