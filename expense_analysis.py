@@ -54,7 +54,7 @@ def load_data(file: str) -> pd.DataFrame:
         expenses['date'] = expenses['date'].apply(lambda x: dt.strptime(x, "%B %d, %Y").date())
 
     except FileNotFoundError:
-        print("File wasn't found, please make sure the file exists in the same directory"
+        print("File wasn't found, please make sure the file exists in the same directory "
               "as main.py, making sure that the file entered ends with '.csv'. And watch out for typos!")
         exit(1)
 
@@ -144,8 +144,10 @@ def expense_type_averages(expenses: pd.DataFrame) -> None:
     :param expenses: pandas DataFrame containing expense data
     """
 
-    # Average spending per expense type
-    per_type_average = expenses.groupby('type')['amount'].mean()
+    # Calculate spending per each expense type
+    exploded = expenses.explode('type')
+
+    per_type_average = exploded.groupby('type')['amount'].mean()
 
     plot_type_data(per_type_average)
 
@@ -155,7 +157,11 @@ def expense_type_totals(expenses: pd.DataFrame) -> None:
     Plotting function that generates a bar chart of the total spending of each expense type in the given dataframe.
     :param expenses: pandas DataFrame containing expense data
     """
-    per_type_total = expenses.groupby('type')['amount'].sum()
+
+    # Calculate total spending per each expense type
+    exploded = expenses.explode('type')
+
+    per_type_total = exploded.groupby('type')['amount'].sum()
 
     plot_type_data(per_type_total, total=True)
 
@@ -168,8 +174,7 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
     """
 
     # List of strings containing all expense types & type combinations in the dataframe
-    expense_types = [', '.join(expense) if len(expense) > 1 else str(expense).strip("(,')") for expense in
-                     grouped_data.index]
+    expense_types = grouped_data.index
 
     # Adjust plot image size
     plt.figure(figsize=(12, 8))
