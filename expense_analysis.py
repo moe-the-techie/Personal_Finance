@@ -32,6 +32,11 @@ def load_data(file: str) -> pd.DataFrame:
         # Load, modify, and validate data
         expenses = pd.read_csv(file)
 
+        if expenses.columns.to_list() != ['Expense', 'Amount', 'Type', 'Comment', 'Date']:
+            raise AttributeError()
+
+        # Rename all columns to lowercase
+
         names = {'Expense': 'expense',
                  'Amount': 'amount',
                  'Type': 'type',
@@ -58,7 +63,7 @@ def load_data(file: str) -> pd.DataFrame:
               "as main.py, making sure that the file entered ends with '.csv'. And watch out for typos!")
         exit(1)
 
-    except ValueError or AttributeError:
+    except (ValueError, AttributeError):
         print("Invalid data format, kindly make sure your .csv file is the one exported directly from Notion "
               "and that it has data stored within it.")
         exit(2)
