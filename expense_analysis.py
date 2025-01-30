@@ -54,7 +54,7 @@ def load_data(file: str) -> pd.DataFrame:
 
         expenses['amount'] = expenses['amount'].apply(lambda x: round(x, 2))
 
-        expenses['type'] = expenses['type'].apply(lambda x: tuple(x.split(',')))
+        expenses['type'] = expenses['type'].apply(lambda x: tuple(x.split(', ')))
 
         expenses['date'] = expenses['date'].apply(lambda x: dt.strptime(x, "%B %d, %Y").date())
 
