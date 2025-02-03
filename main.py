@@ -186,7 +186,12 @@ def reporter(dataset) -> None:
 
             elif command == '3':
                 print("Commented expenses:")
-                print(tabulate(exal.commented_expenses(dataset), headers='keys', tablefmt='fancy_grid'), end="\n\n")
+                commented = exal.commented_expenses(dataset)
+
+                if type(commented) is str:
+                    print(commented)
+                else:
+                    print(tabulate(exal.commented_expenses(dataset), headers='keys', tablefmt='fancy_grid'), end="\n\n")
 
             else:
                 continue
