@@ -32,7 +32,7 @@ def load_data(file: str) -> pd.DataFrame:
         # Load, modify, and validate data
         expenses = pd.read_csv(file)
 
-        if expenses.columns.to_list() != ['Expense', 'Amount', 'Type', 'Comment', 'Date']:
+        if set(expenses.columns.to_list()) != {'Expense', 'Amount', 'Type', 'Comment', 'Date'}:
             raise AttributeError()
 
         # Rename all columns to lowercase
@@ -211,14 +211,12 @@ def plot_type_data(grouped_data: pd.Series, total: bool = False) -> None:
 
     plt.tight_layout()
 
-    plt.savefig(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart")
+    plt.savefig('expense-type-chart.png')
 
     print(f"Plot generated successfully. Opening 'expense-type-chart'...", end="\n\n")
 
-    # Open the image file using PIL and display it
-    img = Image.open(r"C:\Users\hp\Documents\GitHub\Personal_Finance\expense-type-chart.png")
+    img = Image.open("expense-type-chart.png")
     img.show()
-
 
 def change_time_range(start: str, end: str, expenses: pd.DataFrame) -> pd.DataFrame:
     """
